@@ -54,6 +54,9 @@ const OrgDropdown = () => {
           <Dropdown.Item icon={<IconPlus size="tiny" />} onClick={() => router.push(`/new`)}>
             New organization
           </Dropdown.Item>
+          <Dropdown.Item icon={<IconPlus size="tiny" />} onClick={() => router.push(`/new-with-subscription`)}>
+            New organization (Shiny)
+          </Dropdown.Item>
         </>
       }
     >

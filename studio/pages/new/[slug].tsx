@@ -64,6 +64,7 @@ const Wizard: NextPageWithLayout = () => {
   const organizations = values(toJS(app.organizations.list()))
   const currentOrg = organizations.find((o: any) => o.slug === slug)
   const stripeCustomerId = currentOrg?.stripe_customer_id
+  const billedViaOrg = Boolean(currentOrg?.subscription_id)
 
   const availableRegions = getAvailableRegions()
   const isAdmin = checkPermissions(PermissionAction.CREATE, 'projects')
@@ -82,8 +83,9 @@ const Wizard: NextPageWithLayout = () => {
     projectName !== '' &&
     passwordStrengthScore >= DEFAULT_MINIMUM_PASSWORD_STRENGTH &&
     dbRegion !== '' &&
-    dbPricingTierKey !== '' &&
-    (isSelectFreeTier || (!isSelectFreeTier && !isEmptyPaymentMethod))
+    (billedViaOrg ||
+      (dbPricingTierKey !== '' &&
+        (isSelectFreeTier || (!isSelectFreeTier && !isEmptyPaymentMethod))))
 
   const delayedCheckPasswordStrength = useRef(
     debounce((value) => checkPasswordStrength(value), 300)
@@ -398,7 +400,7 @@ const Wizard: NextPageWithLayout = () => {
               </>
             )}
 
-            {isAdmin && (
+            {isAdmin && !billedViaOrg && (
               <Panel.Content>
                 <Listbox
                   label="Pricing Plan"

@@ -26,6 +26,10 @@ export const PRICING_TIER_LABELS = {
   PRO: 'Pro',
 }
 
+export const PRICING_TIER_LABELS_ORG = {
+  PRO: 'Pro',
+}
+
 export const PRICING_TIER_PRODUCT_IDS = {
   FREE: 'tier_free',
   PRO: 'tier_pro',
