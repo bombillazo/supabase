@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { API_URL, STRIPE_PUBLIC_KEY } from 'lib/constants'
-import { useStore } from 'hooks'
+import { useFlag, useStore } from 'hooks'
 import { post } from 'lib/common/fetch'
 import { WizardLayout } from 'components/layouts'
 import { NextPageWithLayout } from 'types'
@@ -11,6 +11,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { useIsHCaptchaLoaded } from 'stores/hcaptcha-loaded-store'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { NewOrgForm } from 'components/interfaces/Organization'
+import { useRouter } from 'next/router'
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
@@ -19,12 +20,15 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
  */
 const Wizard: NextPageWithLayout = () => {
   const { ui } = useStore()
+  const router = useRouter()
 
   const [intent, setIntent] = useState<any>()
   const captchaLoaded = useIsHCaptchaLoaded()
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [captchaRef, setCaptchaRef] = useState<HCaptcha | null>(null)
+
+  // TODO make sure to redirect away from this page if feature toggle is not true
 
   const captchaRefCallback = useCallback((node) => {
     setCaptchaRef(node)

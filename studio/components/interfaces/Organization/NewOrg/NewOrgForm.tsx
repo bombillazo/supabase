@@ -71,9 +71,10 @@ const NewOrgForm = () => {
         name: orgName,
         kind: orgKind,
         payment_method: paymentMethod,
-        tier: 'tier_pro',
+        tier: 'tier_' + dbPricingTierKey.toLowerCase(),
         ...(orgKind == 'COMPANY' ? { size: orgSize } : {}),
       },
+      // Call new V2 endpoint from API
       {
         headers: {
           Version: '2',
@@ -127,6 +128,8 @@ const NewOrgForm = () => {
       })
       return
     }
+
+    console.log({ setupIntent })
 
     const paymentMethod = setupIntent.payment_method as string
 
@@ -248,17 +251,18 @@ const NewOrgForm = () => {
               }
             >
               {Object.entries(PRICING_TIER_LABELS_ORG).map(([k, v]) => {
-                const label = `${v}${k === 'PRO' ? ' - $25/month' : ' - $0/month'}`
                 return (
-                  <Listbox.Option key={k} label={label} value={k}>
-                    {label}
+                  <Listbox.Option key={k} label={v} value={k}>
+                    {v}
                   </Listbox.Option>
                 )
               })}
             </Listbox>
           </Panel.Content>
 
-          <PaymentElement />
+          <Panel.Content>
+            <PaymentElement />
+          </Panel.Content>
         </Panel>
       </form>
     </>
